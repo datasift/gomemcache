@@ -242,17 +242,19 @@ func (c *Client) dial(addr net.Addr) (net.Conn, error) {
 		err error
 	}
 
+	fmt.Println(time.Now().UTC().Format(time.RFC3339), "[DEBUG] connecting to memcache on", addr.Network(), addr.String())
 	nc, err := net.DialTimeout(addr.Network(), addr.String(), c.netTimeout())
 	if err == nil {
+		fmt.Println(time.Now().UTC().Format(time.RFC3339), "[DEBUG] connected to memcache on", addr.Network(), addr.String())
 		return nc, nil
 	}
 
 	if ne, ok := err.(net.Error); ok && ne.Timeout() {
-		fmt.Println(time.Now().UTC().Format(time.RFC3339), "memcache dial error:", err.Error(), addr.Network, addr.String())
+		fmt.Println(time.Now().UTC().Format(time.RFC3339), "[ERROR] memcache dial error:", err.Error(), addr.Network(), addr.String())
 		return nil, &ConnectTimeoutError{addr}
 	}
 
-	fmt.Println(time.Now().UTC().Format(time.RFC3339), "memcache dial error:", err.Error(), addr.Network, addr.String())
+	fmt.Println(time.Now().UTC().Format(time.RFC3339), "[ERROR] memcache dial error:", err.Error(), addr.Network(), addr.String())
 	return nil, err
 }
 
