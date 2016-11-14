@@ -248,9 +248,11 @@ func (c *Client) dial(addr net.Addr) (net.Conn, error) {
 	}
 
 	if ne, ok := err.(net.Error); ok && ne.Timeout() {
+		fmt.Println(time.Now().UTC().Format(time.RFC3339), "memcache dial error:", err.Error(), addr.Network, addr.String())
 		return nil, &ConnectTimeoutError{addr}
 	}
 
+	fmt.Println(time.Now().UTC().Format(time.RFC3339), "memcache dial error:", err.Error(), addr.Network, addr.String())
 	return nil, err
 }
 
